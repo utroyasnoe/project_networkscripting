@@ -67,7 +67,6 @@ def read_port_numbers():
 
 def get_ip_addresses(subnet, mask):
     network = ipaddress.ip_network(subnet + '/' + mask)
-    print(network)
     ip_addresses = [str(ip) for ip in network.hosts()]
     ip_addresses = ip_addresses[10::2]
     return ip_addresses
