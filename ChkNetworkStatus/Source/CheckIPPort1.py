@@ -24,9 +24,10 @@ import os
 import socket
 import subprocess
 import datetime
-#from pywin32 import win32evtlogutil !!!!!!Install pywin32 before uncommenting!!!!!!
-#from pywin32 import win32event
-#from pywin32 import win32evtlog
+import win32evtlogutil
+import win32event
+import win32evtlog
+import time
 
 
 def validate_subnet_mask(subnet, mask):
@@ -74,8 +75,9 @@ def get_ip_addresses(subnet, mask):
 
 def is_reachable(ip):
     try:
-        result = subprocess.run(["ping", "-c", "1", "-W", "1", ip], stdout=subprocess.DEVNULL,
+        result = subprocess.run(["ping", "-n", "1", "-w", "1", ip], stdout=subprocess.DEVNULL,
                                 stderr=subprocess.DEVNULL)
+        time.sleep(1)
         return result.returncode == 0
     except subprocess.CalledProcessError:
         return False
@@ -120,13 +122,13 @@ def write_to_log(open_ports, closed_ports, unreachable_address):
             file.write(ip + "\n")
 
 
-#def write_event_log(ip, port):
-    #event_id = 7777
-    #event_type = win32evtlog.EVENTLOG_INFORMATION_TYPE
-    #event_category = 0
-    #strings = (f"Open port detected: {ip}:{port}",)
-    #data = None
-    #win32evtlogutil.ReportEvent("Application", event_id, event_category, event_type, strings, data)
+def write_event_log(ip, port):
+    event_id = 7777
+    event_type = win32evtlog.EVENTLOG_INFORMATION_TYPE
+    event_category = 0
+    strings = (f"Open port detected: {ip}:{port}",)
+    data = None
+    win32evtlogutil.ReportEvent("Application", event_id, event_category, event_type, strings, data)
 
 
 subnet, mask = get_subnet()
@@ -152,7 +154,7 @@ if proceed.lower() == 'y':
     open_ports, closed_ports, unreachable_address = scan_ports(ip_addresses, port_numbers)
     print("Open ports:")
     for ip, port in open_ports:
-        #write_event_log(ip, port)
+        write_event_log(ip, port)
         print(f"{ip}:{port}")
     print("Closed ports:")
     for ip, port in closed_ports:
