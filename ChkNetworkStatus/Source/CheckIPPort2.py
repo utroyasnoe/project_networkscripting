@@ -23,9 +23,9 @@ import os
 import socket
 import subprocess
 import datetime
-#from pywin32 import win32evtlogutil
-#from pywin32 import win32event
-#from pywin32 import win32evtlog
+from pywin32 import win32evtlogutil
+from pywin32 import win32event
+from pywin32 import win32evtlog
 
 
 def validate_subnet_mask(subnet, mask):
