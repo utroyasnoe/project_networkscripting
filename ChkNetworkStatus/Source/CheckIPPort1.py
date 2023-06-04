@@ -38,12 +38,6 @@ def validate_subnet_mask(subnet, mask):
         return False
 
 
-def read_port_numbers(file_path):
-    with open(file_path, "r") as file:
-        port_numbers = file.read().splitlines()
-    return port_numbers
-
-
 def get_subnet():
     while True:
         user_data = input("Enter the IP subnet: ")
